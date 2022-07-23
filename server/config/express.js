@@ -1,0 +1,63 @@
+const fileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const express = require("express");
+const cors = require('cors');
+/* auth route for login api */
+const authRoute = require('../api/app');
+/* express-session */
+const session = require('express-session');
+// initalize sequelize with session store
+var SequelizeStore = require("connect-session-sequelize")(session.Store);
+const database = require('./db.connection');
+/* session store */
+const store = new SequelizeStore({
+    db: database,
+});
+
+const app = express();
+
+app.get('/favicon.ico', (req, res) => res.status(200))
+app.get('/status', (req, res) => res.status(200).json({ status: true, message: 'server is running' }))
+/* express session init */
+app.use(session(
+    {
+        secret: 'my secret',
+        resave: false,
+        saveUninitialized: false,
+        store: store,
+    })
+);
+store.sync();
+
+app.use(cors());
+app.use(fileUpload({ createParentPath: true }));
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(bodyParser.json());
+app.disable('etag').disable('x-powered-by');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static('server/assets'));
+
+app.use(express.urlencoded({ extended: false, limit: '1kb' }));
+
+app.use('/user', require('../src/routers/user.route'));
+app.use('/services', require('../src/routers/services.route'));
+app.use('/admin', require('../src/routers/admin.route'));
+/* auth route */
+app.use(authRoute);
+
+app.use((err, req, res, next) => {
+    if (err.status == 404) {
+        return res.status(err.status).json({
+            error: true,
+            message: 'Invalid URL'
+        });
+    }
+    res.status(err.status || 500).json({ error: true, message: 'Invalid reuqest' });
+    console.trace(err);
+    next(err.message);
+});
+
+module.exports = app;
