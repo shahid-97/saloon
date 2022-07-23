@@ -1,5 +1,4 @@
 .env
 node_modules
 server/assets/profile_images
-
 package-lock.json
