@@ -17,7 +17,11 @@ Service.hasMany(SubService, {
     foreignKey: 'service_id',
     targetKey:'id'
 });
-
+/* collabration work */
+SubService.belongsTo(Service, {
+    foreignKey: 'service_id',
+    targetKey:'id'
+});
 ServiceOrders.belongsTo(Service, {
     foreignKey: 'service_id',
     targetKey:'id'

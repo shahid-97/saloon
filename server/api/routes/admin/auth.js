@@ -6,11 +6,19 @@ const app = express.Router();
 
 /**
  * @api
- * @route /login
+ * @route /log-in
  * 
  * @description api to login
  */
 app.post('/log-in', authController.postLogin)
+
+/**
+ * @api
+ * @route /sign-up
+ * 
+ * @description api to signup
+ */
+//  app.post('/log-in', authController.postSignUp)
 
 module.exports = app;
 

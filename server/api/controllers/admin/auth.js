@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize");
 const bcrypt = require('bcrypt')
 const sequelize = require('../../../config/db.connection');
-const Customer = require('../../../models/customers')(sequelize, Sequelize);
+const jwt = require("jsonwebtoken");
+const AdminModel = require('../../../models/admin')(sequelize, Sequelize);
 
 /**
  * @action postLogin()
@@ -10,43 +11,58 @@ const Customer = require('../../../models/customers')(sequelize, Sequelize);
  */
 exports.postLogin = (req, res, next) => {
     console.log('logging in ...');
+    const TOKEN_SECRET = 'somesupersecretsecret';
     const email = req.body.email;
     const password = req.body.password;
-    Customer.findOne({ where: { email: email } })
-        
+    AdminModel.findOne({ where: { email: email } })
         .then((user) => {
-            const response = [];
             if (!user) {
                 //no user
-                response.push(['isUser=>false']);
-                res.json(response)
-                res.end()
-            }
-            else{
-                response.push(['isUser=>true'])
-            }
-            bcrypt.compare(password, user.password)
-                .then((doMatch) => {
-                    if (doMatch) {
-                        req.session.isLoggedIn = true;
-                        req.session.user = user;
-                        req.session.save(err => {
-                            console.log(err)
-                        })
-                        response.push(['isPassword=>true'])
-                        res.json(response);
-                        res.end()
-                    }
-                    else {
-                        response.push(['isPassword=>false'])
-                        res.json(response)
-                        res.end()
+                const error = new Error('A admin with this email could not be found.');
+                error.status = 401;
+                next(error)
+            } else {
+                bcrypt.compare(password, user.password)
+                    .then((doMatch) => {
+                        if (doMatch) {
+                            req.session.isLoggedIn = true;
+                            req.session.user = user;
+                            req.session.save((err) => {
+                                if (err) {
+                                    console.log(err)
+                                }
+                            })
+                            const token = jwt.sign(
+                                {
+                                    email: user.email,
+                                    userId: user.id
+                                },
+                                TOKEN_SECRET,
+                                { expiresIn: '1h' }
+                            );
+                            res.status(200).json({ token: token, userId: user.id });
+                        }
+                        else {
 
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                });
+                            const error = new Error('Wrong password!');
+                            error.status = 401;
+                            next(error)
+                        }
+                    }).catch((err) => {
+                        console.log(err)
+                        if (!err.status) {
+                            err.status = 500;
+                        }
+                        next(err);
+                    });
+            }
+
         }).catch((err) => {
             console.log(err)
+            if (!err.status) {
+                err.status = 500;
+            }
+            next(err);
         });
 }
+

@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: false, limit: '1kb' }));
 app.use('/user', require('../src/routers/user.route'));
 app.use('/services', require('../src/routers/services.route'));
 app.use('/admin', require('../src/routers/admin.route'));
-/* auth route */
+/* auth route for dashboard */
 app.use(authRoute);
 
 app.use((err, req, res, next) => {
@@ -55,7 +55,25 @@ app.use((err, req, res, next) => {
             message: 'Invalid URL'
         });
     }
+    /* erro middle ware for 404 error code */
+    if (err.httpStatusCode == 404) {
+        return res.status(err.httpStatusCode).json({
+            error: true,
+            message: err.message,
+
+        });
+    }
+    /* error middleware for 401 error code */
+    if (err.status == 401) {
+        return res.status(err.status).json({
+            error: true,
+            message: err.message,
+            statusCode: err.status
+        });
+    }
     res.status(err.status || 500).json({ error: true, message: 'Invalid reuqest' });
+    // res.status(err.status || 401).json({ error: true, message: 'Invalid email!' });
+
     console.trace(err);
     next(err.message);
 });
