@@ -13,7 +13,7 @@ exports.getCategory = (req, res, next) => {
         .findAll()
         .then((category) => {
             res.setHeader('Content-type', 'application/json')
-            res.send({ data: category })
+            res.send(category )
             res.end()
         })
         .catch((err) => {
