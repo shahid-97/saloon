@@ -2,6 +2,9 @@
 const sequelize = require('./../../../config/db.connection');
 const Sequelize = require('sequelize');
 const Service = require('./../../../models/services')(sequelize, Sequelize);
+const path = require('path');
+var multiparty = require('multiparty');
+var util = require('util');
 
 /**
  * @action getCategory()
@@ -28,14 +31,12 @@ exports.getCategory = (req, res, next) => {
  */
 exports.addCategory = (req, res, next) => {
     const service_name = req.body.service_name;
-    // const image_url = data['image_url'] ?? '';
 
     Service.create({
         service_name: service_name,
-        // image_url: image_url,
+        // image_url: imageUrl,
     })
         .then((result) => {
-            console.log(result)
             res.json({ status: 201, message: 'record added successfully...' });
             res.end()
         })

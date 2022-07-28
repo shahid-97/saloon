@@ -19,7 +19,8 @@ exports.getCustomer = (req, res, next) => {
             res.end();
         })
         .catch((err) => {
-            console.log(err)
+            err.status = 500;
+            next(err)
         });
 };
 

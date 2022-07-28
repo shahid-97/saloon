@@ -3,6 +3,13 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require("express");
 const cors = require('cors');
+
+const sequelize = require('./db.connection');
+const Sequelize = require("sequelize");
+/* service model */
+const Service = require('./../models/services')(sequelize, Sequelize);
+/* subservices model */
+const SubService = require('./../models/sub_services')(sequelize, Sequelize);
 /* auth route for login api */
 const authRoute = require('../api/app');
 /* express-session */
@@ -10,12 +17,16 @@ const session = require('express-session');
 // initalize sequelize with session store
 var SequelizeStore = require("connect-session-sequelize")(session.Store);
 const database = require('./db.connection');
+
+
 /* session store */
 const store = new SequelizeStore({
     db: database,
 });
 
 const app = express();
+
+// app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.get('/favicon.ico', (req, res) => res.status(200))
 app.get('/status', (req, res) => res.status(200).json({ status: true, message: 'server is running' }))
@@ -29,6 +40,11 @@ app.use(session(
     })
 );
 store.sync();
+/* database association */
+SubService.belongsTo(Service);
+Service.hasMany(SubService, {
+    foreignKey: 'service_id',
+});
 
 app.use(cors());
 app.use(fileUpload({ createParentPath: true }));

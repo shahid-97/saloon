@@ -8,41 +8,41 @@ const sequelize = require('./../config/db.connection');
 const Sequelize = require("sequelize");
 const AdminModel = require('./../models/admin')(sequelize, Sequelize);
 const bcrypt = require('bcryptjs');
+
 const Service = require('./../models/services')(sequelize, Sequelize);
 const SubService = require('./../models/sub_services')(sequelize, Sequelize);
-/* adding admin default */
-AdminModel.findOne({ where: { email: 'admin@admin.com', id: 1 } })
-    .then((admin) => {
-        if (!admin) {
-            const saltRounds = 12;
-            const myPlaintextPassword = 'admin123$%^';
-            bcrypt.hash(myPlaintextPassword, saltRounds, (err, hash) => {
-                AdminModel.create({
-                    first_name: 'Admin',
-                    last_name: 'admin',
-                    email: 'admin@admin.com',
-                    password: hash,
-                }).then((result) => {
-                    console.log("admin created...")
-                }).catch((err) => {
-                    console.log(err)
+
+/* database sync */
+sequelize.sync().then((result) => {
+    /* adding admin default */
+    AdminModel.findOne({ where: { email: 'admin@admin.com', id: 1 } })
+        .then((admin) => {
+            if (!admin) {
+                const saltRounds = 12;
+                const myPlaintextPassword = 'admin123$%^';
+                bcrypt.hash(myPlaintextPassword, saltRounds, (err, hash) => {
+                    AdminModel.create({
+                        first_name: 'Admin',
+                        last_name: 'admin',
+                        email: 'admin@admin.com',
+                        password: hash,
+                    }).then((result) => {
+                        console.log("admin created...")
+
+                    }).catch((err) => {
+                        console.log(err)
+                    });
                 });
-            });
 
-        }
-    }).catch((err) => {
-        console.log(err)
-    });
+            }
 
-// Service.hasMany(SubService, {
-//     foreignKey: 'service_id',
-//     targetKey: 'id'
-// });
-// /* collabration work */
-// SubService.belongsTo(Service, {
-//     foreignKey: 'service_id',
-//     targetKey: 'id'
-// });
+        }).catch((err) => {
+            console.log(err)
+        });
+}).catch((err) => {
+    console.log(err)
+});
+
 
 /* auth route */
 app.use('/admin', authRoute);
