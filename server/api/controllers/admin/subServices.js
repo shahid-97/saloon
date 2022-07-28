@@ -1,107 +1,117 @@
 /* @Controller category */
 const sequelize = require('./../../../config/db.connection');
 const Sequelize = require('sequelize');
-const SubService = require('./../../../models/sub_services')(sequelize, Sequelize);
-const Service = require('./../../../models/services')(sequelize, Sequelize);
+const Service = require('./../../models/services');
+const SubService = require('./../../models/sub_services');
+const Service2 = require('./../../../models/services')(sequelize, Sequelize);
+const SubService2 = require('./../../../models/sub_services')(sequelize, Sequelize);
 
 /**
- * @action getCategory()
+ * @action getSubService()
  * 
- * @description to get all category
+ * @description to get all getSubService
  */
 exports.getSubService = (req, res, next) => {
     const id = req.params.id;
-    (SubService.findAll({ where: { service_id: id } })
+    (Service.findAll({ where: { service_id: id } })
         .then((subservices) => {
             if (!subservices.length) {
-                res.json("no data found against the parameter")
+                const err = new Error("no subservices found!")
+                err.httpStatusCode = 404;
+                next(err)
             }
             else if (subservices) {
-
-                res.json(subservices)
+                res.send(subservices)
+                res.end()
             }
 
 
         }).catch((err) => {
-            console.log(err)
+            err.status = 500;
+            next(err)
         }))
 }
 /**
- * @action addCategory()
+ * @action postSubService()
  * 
- * @description add category
+ * @description add postSubService
  */
-exports.addCategory = (req, res, next) => {
-    // const data = req.body ?? [];
-    // console.log('category data...')
-    // const category_name = data['category_name'] ?? '';
-    // const image_url = data['image_url'] ?? '';
-    // const description = data['description'] ?? '';
+exports.postSubService = (req, res, next) => {
 
-    // Category.create({
-    //     category_name: category_name,
-    //     image_url: image_url,
-    //     description: description,
-    // })
-    //     .then((result) => {
-    //         console.log('created category...')
-    //         res.send('category created...')
-    //         res.end()
-    //     })
-    //     .catch((err) => {
-    //         console.error(err);
-    //     });
+    const sub_service_name = req.body.sub_service_name;
+    const service_id = req.body.service_id;
+    const service_name = req.body.service_name;
+    console.log(sub_service_name, service_id, service_name)
+
+    SubService.create({
+        sub_service_name: sub_service_name,
+        service_id: service_id,
+    })
+        .then((result) => {
+            res.json({ status: 201, message: 'record added successfully...' });
+            res.end()
+        }).catch((err) => {
+            err.status = 500;
+            next(err)
+        });
+
 }
 /**
- * @action updateCategory()
+ * @action updateSubService()
  * 
- * @description update category
+ * @description update updateSubService
  */
-exports.updateCategory = (req, res, next) => {
-    // const data = req.body ?? [];
-    // const id = req.params.id ?? '';
-    // const category_name = data['category_name'] ?? '';
-    // const image_url = data['image_url'] ?? '';
-    // const description = data['description'] ?? '';
-
-    // Category.update(
-    //     {
-    //         category_name: category_name,
-    //         image_url: image_url,
-    //         description: description
-    //     },
-    //     {
-    //         where: {
-    //             id: id
-    //         }
-    //     }
-    // ).then((result) => {
-    //     console.log('update successfully...')
-    //     res.send(result)
-    //     res.end()
-    // }).catch((err) => {
-    //     console.log(err)
-    // });
+exports.updateSubService = (req, res, next) => {
+    const updateSubServiceName = req.body.sub_service_name;
+    const id = req.params.id;
+    SubService2.update(
+        {
+            sub_service_name: updateServiceName,
+        },
+        {
+            where: {
+                id: id
+            }
+        }
+    ).then((result) => {
+        if (!result[0]) {
+            const err = new Error("either no data changed or no sub service found to be update!")
+            err.httpStatusCode = 404;
+            next(err)
+        }
+        else {
+            res.json({ status: 201, message: 'sub service updated successfully...' });
+            res.end()
+        }
+    }).catch((err) => {
+        err.status = 500;
+        next(err)
+    });
 };
 /**
- * @action deletecategory()
+ * @action deleteSubService()
  * 
- * @description delete specific category
+ * @description delete specific deleteSubService
  */
-exports.deleteCategory = (req, res, next) => {
-    // const id = req.params.id;
-    // Category.destroy({
-    //     where: {
-    //         id: id
-    //     }
-    // }).then((result) => {
-    //     console.log('deleted...')
-    //     res.send('deleted...')
-    //     res.end()
-    // }).catch((err) => {
-    //     console.log(err)
-    // });
+exports.deleteSubService = (req, res, next) => {
+    const id = req.params.id;
+    SubService2.destroy({ where: { id: id } })
+        .then((rowDeleted) => {
+            if (rowDeleted == 1) {
+                res.json({ status: 200, message: 'subservice deleted successfully...' });
+                res.end()
+            }
+            else {
+                const err = new Error("no subservice found to be delete!")
+                err.httpStatusCode = 404;
+                next(err)
+            }
+        }).catch((err) => {
+            err.status = 500;
+            next(err)
+        });
 }
+
 /**
  * @action deleteAllcategorys()
  * 

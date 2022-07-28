@@ -18,7 +18,7 @@ app.get('/get-subservices/:id', subServiceController.getSubService);
  * 
  * @description api to add product
  */
-// app.post('/add-category', categoryController.addCategory)
+app.post('/add-subservice', subServiceController.postSubService)
 
 /**
  * @api
@@ -26,7 +26,7 @@ app.get('/get-subservices/:id', subServiceController.getSubService);
  * 
  * @description api to update product
  */
-// app.put('/update-category/:id', categoryController.updateCategory)
+app.put('/update-subservice/:id', subServiceController.updateSubService)
 
 /**
  * @api
@@ -34,7 +34,7 @@ app.get('/get-subservices/:id', subServiceController.getSubService);
  * 
  * @description api to delete product
  */
-// app.delete('/delete-category/:id', categoryController.deleteCategory)
+app.delete('/delete-subservice/:id', subServiceController.deleteSubService)
 /**
  * @api
  * @route /delete-all-product
