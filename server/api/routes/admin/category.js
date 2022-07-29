@@ -1,5 +1,5 @@
 const express = require('express');
-
+const path = require('path');
 const categoryController = require('./../../controllers/admin/category');
 
 const app = express.Router();
@@ -42,6 +42,6 @@ app.delete('/delete-category/:id', categoryController.deleteCategory)
  * 
  * @description api to delete all products
  */
- app.delete('/delete-all-category', categoryController.deleteAllCategory)
+app.delete('/delete-all-category', categoryController.deleteAllCategory)
 
 module.exports = app;

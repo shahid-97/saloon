@@ -29,6 +29,7 @@ Services.init(
         tableName: 'services',
         timestamps: true,
         modelName: 'Services',
+        
     }
 );
 

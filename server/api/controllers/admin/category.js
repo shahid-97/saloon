@@ -3,9 +3,7 @@ const sequelize = require('./../../../config/db.connection');
 const Sequelize = require('sequelize');
 const Service = require('./../../../models/services')(sequelize, Sequelize);
 const path = require('path');
-var multiparty = require('multiparty');
-var util = require('util');
-
+const dirname = require('./../../../dirName')
 /**
  * @action getCategory()
  * 
@@ -31,10 +29,25 @@ exports.getCategory = (req, res, next) => {
  */
 exports.addCategory = (req, res, next) => {
     const service_name = req.body.service_name;
+    var filePath = '';
+    var image_url = '';
+    if (req.files.image) {
 
+        var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
+        fileName = new Date().toISOString() + '-' + service_name + fileMIMEType;
+        filePath = path.join(dirname, 'api/images/') + fileName;
+        image_url = 'api/images/' + fileName;
+        req.files.image.mv(filePath).then((result) => {
+            console.log('successfully upload file')
+        }).catch((err) => {
+            err.status = 500;
+            next(err)
+        });
+
+    }
     Service.create({
         service_name: service_name,
-        // image_url: imageUrl,
+        image_url: image_url,
     })
         .then((result) => {
             res.json({ status: 201, message: 'record added successfully...' });
