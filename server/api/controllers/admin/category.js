@@ -35,7 +35,7 @@ exports.addCategory = (req, res, next) => {
 
         var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
         fileName = new Date().toISOString() + '-' + service_name + fileMIMEType;
-        filePath = path.join(dirname, 'api/images/') + fileName;
+        filePath = path.join(dirname, 'api/images/services/') + fileName;
         image_url = 'api/images/' + fileName;
         req.files.image.mv(filePath).then((result) => {
             console.log('successfully upload file')
@@ -47,7 +47,7 @@ exports.addCategory = (req, res, next) => {
     }
     Service.create({
         service_name: service_name,
-        image_url: image_url,
+        image_url: filePath,
     })
         .then((result) => {
             res.json({ status: 201, message: 'record added successfully...' });
