@@ -13,7 +13,7 @@ const SubService2 = require('./../../../models/sub_services')(sequelize, Sequeli
  */
 exports.getSubService = (req, res, next) => {
     const id = req.params.id;
-    (Service.findAll({ where: { service_id: id } })
+    (SubService.findAll({ where: { service_id: id } })
         .then((subservices) => {
             if (!subservices.length) {
                 const err = new Error("no subservices found!")
@@ -37,7 +37,7 @@ exports.getSubService = (req, res, next) => {
  * @description add postSubService
  */
 exports.postSubService = (req, res, next) => {
-
+console.log(req.body)
     const sub_service_name = req.body.sub_service_name;
     const service_id = req.body.service_id;
     const service_name = req.body.service_name;
