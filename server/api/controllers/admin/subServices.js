@@ -41,8 +41,6 @@ console.log(req.body)
     const sub_service_name = req.body.sub_service_name;
     const service_id = req.body.service_id;
     const service_name = req.body.service_name;
-    console.log(sub_service_name, service_id, service_name)
-
     SubService.create({
         sub_service_name: sub_service_name,
         service_id: service_id,

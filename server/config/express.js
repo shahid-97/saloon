@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const express = require("express");
 const cors = require('cors');
-
 const sequelize = require('./db.connection');
 const Sequelize = require("sequelize");
 /* service model */
@@ -26,8 +25,7 @@ const store = new SequelizeStore({
 
 const app = express();
 
-// app.use('/images', express.static(path.join(__dirname, 'images')));
-
+  
 app.get('/favicon.ico', (req, res) => res.status(200))
 app.get('/status', (req, res) => res.status(200).json({ status: true, message: 'server is running' }))
 /* express session init */

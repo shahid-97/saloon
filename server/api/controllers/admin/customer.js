@@ -3,7 +3,8 @@ const sequelize = require('./../../../config/db.connection');
 const Sequelize = require("sequelize");
 const bcryptjs = require('bcryptjs');
 const Customer = require('./../../../models/customers')(sequelize, Sequelize);
-
+const path = require('path');
+const dirname = require('./../../../dirName')
 /**
  * adding customers controller
  */
@@ -11,7 +12,6 @@ exports.getCustomer = (req, res, next) => {
     /* request data */
     Customer.findAll()
         .then((customers) => {
-            // console.log(JSON.stringify(customers));
             /* sending response */
             res.setHeader('Content-Type', 'application/json');
             res.sendStatus = 200;
@@ -56,12 +56,29 @@ exports.updateCustomer = (req, res, next) => {
     const updateLastName = req.body.last_name;
     const updateEmail = req.body.email;
     const updatePhone = req.body.phone;
+    var filePath = '';
+    var image_url = '';
+    if (req.files.image) {
+
+        var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
+        fileName = new Date().toISOString() + '-' + updateFirstName + fileMIMEType;
+        filePath = path.join(dirname, 'api/images/customers/') + fileName;
+        image_url = 'api/images/' + fileName;
+        req.files.image.mv(filePath).then((result) => {
+            console.log('successfully upload file')
+        }).catch((err) => {
+            err.status = 500;
+            next(err)
+        });
+
+    }
     Customer.update(
         {
             first_name: updateFirstName,
             last_name: updateLastName,
             email: updateEmail,
             phone_no: updatePhone,
+            image_url:filePath
         },
         {
             where: {
