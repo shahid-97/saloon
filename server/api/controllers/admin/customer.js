@@ -55,23 +55,28 @@ exports.updateCustomer = (req, res, next) => {
     const updateFirstName = req.body.first_name;
     const updateLastName = req.body.last_name;
     const updateEmail = req.body.email;
-    const updatePhone = req.body.phone;
+    const updatePhone = req.body.phone_no;
     var filePath = '';
     var image_url = '';
-    if (req.files.image) {
+    
+    // console.log(req.files.image)
+    // if (req.files) {
+    //     if (req.files.image) {
 
-        var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
-        fileName = new Date().toISOString() + '-' + updateFirstName + fileMIMEType;
-        filePath = path.join(dirname, 'api/images/customers/') + fileName;
-        image_url = 'api/images/' + fileName;
-        req.files.image.mv(filePath).then((result) => {
-            console.log('successfully upload file')
-        }).catch((err) => {
-            err.status = 500;
-            next(err)
-        });
-
-    }
+    //         var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
+    //         fileName = new Date().toISOString() + '-' + updateFirstName + fileMIMEType;
+    //         filePath = path.join(dirname, 'api/images/customers/') + fileName;
+    //         image_url = 'api/images/' + fileName;
+    //         req.files.image.mv(filePath).then((result) => {
+    //             console.log('successfully upload file')
+    //         }).catch((err) => {
+    //             err.status = 500;
+    //             next(err)
+    //         });
+    
+    //     }
+    // }
+    
     Customer.update(
         {
             first_name: updateFirstName,
@@ -87,7 +92,9 @@ exports.updateCustomer = (req, res, next) => {
         }
     )
         .then((result) => {
+            console.log(result)
             if (!result[0]) {
+                console.log("inside log")
                 const err = new Error("either no data changed or no customer found to be update!")
                 err.httpStatusCode = 404;
                 next(err)
