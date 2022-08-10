@@ -58,6 +58,7 @@ exports.updateCustomer = (req, res, next) => {
     const updatePhone = req.body.phone_no;
     var filePath = '';
     var image_url = '';
+<<<<<<< HEAD
     
     // console.log(req.files.image)
     // if (req.files) {
@@ -77,6 +78,22 @@ exports.updateCustomer = (req, res, next) => {
     //     }
     // }
     
+=======
+    // if (req.files.image) {
+
+    //     var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
+    //     fileName = new Date().toISOString() + '-' + updateFirstName + fileMIMEType;
+    //     filePath = path.join(dirname, 'api/images/customers/') + fileName;
+    //     image_url = 'api/images/' + fileName;
+    //     req.files.image.mv(filePath).then((result) => {
+    //         console.log('successfully upload file')
+    //     }).catch((err) => {
+    //         err.status = 500;
+    //         next(err)
+    //     });
+
+    // }
+>>>>>>> f1cae4c7 (update api fixes)
     Customer.update(
         {
             first_name: updateFirstName,

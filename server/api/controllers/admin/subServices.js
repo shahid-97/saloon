@@ -64,7 +64,7 @@ exports.updateSubService = (req, res, next) => {
     const id = req.params.id;
     SubService2.update(
         {
-            sub_service_name: updateServiceName,
+            sub_service_name: updateSubServiceName,
         },
         {
             where: {
