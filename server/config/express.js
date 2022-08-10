@@ -53,6 +53,8 @@ app.disable('etag').disable('x-powered-by');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('server/assets'));
+/* api static file serving */
+app.use('/static', express.static('server/api/images/'))
 
 app.use(express.urlencoded({ extended: false, limit: '1kb' }));
 

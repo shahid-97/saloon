@@ -10,20 +10,7 @@ const dirname = require("./../../../dirName");
  * @description to get all category
  */
 exports.getCategory = (req, res, next) => {
-<<<<<<< HEAD
-    Service
-        .findAll()
-        .then((category) => {
-            res.setHeader('Content-type', 'application/json')
-            res.send(category )
-            res.end()
-        })
-        .catch((err) => {
-            console.log(err)
-        });
 
-}
-=======
   Service.findAll()
     .then((category) => {
       res.setHeader("Content-type", "application/json");
@@ -35,7 +22,7 @@ exports.getCategory = (req, res, next) => {
       next(err);
     });
 };
->>>>>>> f1cae4c7 (update api fixes)
+
 /**
  * @action addCategory()
  *
@@ -45,11 +32,13 @@ exports.addCategory = (req, res, next) => {
   const service_name = req.body.service_name;
   var filePath = "";
   var image_url = "";
+  
   if (req.files.image) {
     var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
-    fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
+    fileName='image_'+new Date().toISOString()+fileMIMEType;
+    // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
     filePath = path.join(dirname, "api/images/services/") + fileName;
-    image_url = "api/images/" + fileName;
+    image_url = "static/services/" + fileName;
     req.files.image
       .mv(filePath)
       .then((result) => {
@@ -62,7 +51,7 @@ exports.addCategory = (req, res, next) => {
   }
   Service.create({
     service_name: service_name,
-    image_url: filePath,
+    image_url: image_url,
   })
     .then((result) => {
       res.json({ status: 201, message: "record added successfully..." });
