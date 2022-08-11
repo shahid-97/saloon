@@ -1,20 +1,37 @@
 /* @Controller category */
 const sequelize = require("./../../../config/db.connection");
 const Sequelize = require("sequelize");
+
 const Service = require("./../../../models/services")(sequelize, Sequelize);
 const path = require("path");
 const dirname = require("./../../../dirName");
+const Services = require("../../models/services");
+const SubServices = require("./../../../models/sub_services")(
+  sequelize,
+  Sequelize
+);
 /**
  * @action getCategory()
  *
  * @description to get all category
  */
 exports.getCategory = (req, res, next) => {
+  /* model association */
+  Services.hasMany(SubServices, {
+    foreignKey: "service_id",
+    targetKey: "id",
+  });
 
-  Service.findAll()
-    .then((category) => {
+  const data = Services.findAll({
+    include: {
+      model: SubServices,
+      required: false,
+    },
+  });
+  data
+    .then((result) => {
       res.setHeader("Content-type", "application/json");
-      res.send({ data: category });
+      res.send(result );
       res.end();
     })
     .catch((err) => {
@@ -32,10 +49,10 @@ exports.addCategory = (req, res, next) => {
   const service_name = req.body.service_name;
   var filePath = "";
   var image_url = "";
-  
+
   if (req.files.image) {
     var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
-    fileName='image_'+new Date().toISOString()+fileMIMEType;
+    fileName = "image_" + new Date().toISOString() + fileMIMEType;
     // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
     filePath = path.join(dirname, "api/images/services/") + fileName;
     image_url = "static/services/" + fileName;

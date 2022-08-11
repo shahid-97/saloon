@@ -2,10 +2,10 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("./../../config/db.connection");
 const Services = require("./services");
-class Sub_services extends Model {
+class SubServices extends Model {
   static associate(models) {}
 }
-Sub_services.init(
+SubServices.init(
   {
     id: {
       autoIncrement: true,
@@ -25,8 +25,8 @@ Sub_services.init(
     sequelize,
     tableName: "sub_services",
     timestamps: false,
-    modelName: "Sub_services",
+    modelName: "SubServices",
   }
 );
 
-module.exports = Sub_services;
+module.exports = SubServices;
