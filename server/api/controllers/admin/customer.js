@@ -66,7 +66,7 @@ exports.updateCustomer = (req, res, next) => {
       fileName =
         new Date().toISOString() + "-" + updateFirstName + fileMIMEType;
       filePath = path.join(dirname, "api/images/customers/") + fileName;
-      image_url = "api/images/customers/" + fileName;
+      image_url = "static/customers/" + fileName;
       req.files.image
         .mv(filePath)
         .then((result) => {
