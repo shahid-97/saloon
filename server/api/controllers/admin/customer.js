@@ -79,21 +79,6 @@ exports.updateCustomer = (req, res, next) => {
     }
   }
 
-  // if (req.files.image) {
-
-  //     var fileMIMEType = '.' + req.files.image.mimetype.split('/')[1];
-  //     fileName = new Date().toISOString() + '-' + updateFirstName + fileMIMEType;
-  //     filePath = path.join(dirname, 'api/images/customers/') + fileName;
-  //     image_url = 'api/images/' + fileName;
-  //     req.files.image.mv(filePath).then((result) => {
-  //         console.log('successfully upload file')
-  //     }).catch((err) => {
-  //         err.status = 500;
-  //         next(err)
-  //     });
-
-  // }
-
   Customer.update(
     {
       first_name: updateFirstName,

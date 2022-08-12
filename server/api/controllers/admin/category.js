@@ -50,22 +50,22 @@ exports.addCategory = (req, res, next) => {
   var filePath = "";
   var image_url = "";
 
-  if (req.files.image) {
-    var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
-    fileName = "image_" + new Date().toISOString() + fileMIMEType;
-    // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
-    filePath = path.join(dirname, "api/images/services/") + fileName;
-    image_url = "static/services/" + fileName;
-    req.files.image
-      .mv(filePath)
-      .then((result) => {
-        console.log("successfully upload file");
-      })
-      .catch((err) => {
-        err.status = 500;
-        next(err);
-      });
-  }
+  // if (req.files.image) {
+  //   var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
+  //   fileName = "image_" + new Date().toISOString() + fileMIMEType;
+  //   // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
+  //   filePath = path.join(dirname, "api/images/services/") + fileName;
+  //   image_url = "static/services/" + fileName;
+  //   req.files.image
+  //     .mv(filePath)
+  //     .then((result) => {
+  //       console.log("successfully upload file");
+  //     })
+  //     .catch((err) => {
+  //       err.status = 500;
+  //       next(err);
+  //     });
+  // }
   Service.create({
     service_name: service_name,
     image_url: image_url,

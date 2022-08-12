@@ -40,28 +40,32 @@ exports.getSubService = (req, res, next) => {
  * @description add postSubService
  */
 exports.postSubService = (req, res, next) => {
+  Service.hasMany(SubService, {
+    foreignKey: "service_id",
+    targetKey: "id",
+  });
   const sub_service_name = req.body.sub_service_name;
   const service_id = req.body.service_id;
   const service_name = req.body.service_name;
 
   var filePath = "";
   var image_url = "";
-  if (req.files.image) {
-    var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
-    fileName = "image_" + new Date().toISOString() + fileMIMEType;
-    // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
-    filePath = path.join(dirname, "api/images/sub_services/") + fileName;
-    image_url = "static/sub_services/" + fileName;
-    req.files.image
-      .mv(filePath)
-      .then((result) => {
-        console.log("successfully upload file");
-      })
-      .catch((err) => {
-        err.status = 500;
-        next(err);
-      });
-  }
+  // if (req.files.image) {
+  //   var fileMIMEType = "." + req.files.image.mimetype.split("/")[1];
+  //   fileName = "image_" + new Date().toISOString() + fileMIMEType;
+  //   // fileName = new Date().toISOString() + "-" + service_name + fileMIMEType;
+  //   filePath = path.join(dirname, "api/images/sub_services/") + fileName;
+  //   image_url = "static/sub_services/" + fileName;
+  //   req.files.image
+  //     .mv(filePath)
+  //     .then((result) => {
+  //       console.log("successfully upload file");
+  //     })
+  //     .catch((err) => {
+  //       err.status = 500;
+  //       next(err);
+  //     });
+  // }
   SubService.create({
     sub_service_name: sub_service_name,
     image_url:image_url,
