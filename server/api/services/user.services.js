@@ -17,7 +17,8 @@ const {
 
 module.exports = {
    
-    getOrders
+    getOrders,
+    getVendor
    
 }
 
@@ -26,6 +27,13 @@ function getOrders() {
     return new Promise((resolve, reject) => {
         ServiceOrders.findAll({include: [{model:Customers}, {model:Vendors}], limit:10})
             .then(orders => resolve(orders))
+            .catch(err => reject(err));
+    });
+}
+function getVendor() {
+    return new Promise((resolve, reject) => {
+        Vendors.findAll({limit:10})
+            .then(vendors => resolve(vendors))
             .catch(err => reject(err));
     });
 }
