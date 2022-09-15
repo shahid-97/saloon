@@ -44,9 +44,11 @@ exports.postSubService = (req, res, next) => {
     foreignKey: "service_id",
     targetKey: "id",
   });
-  const sub_service_name = req.body.sub_service_name;
-  const service_id = req.body.service_id;
-  const service_name = req.body.service_name;
+  // const sub_service_name = req.body.sub_service_name;
+  // const service_id = req.body.service_id;
+  // const service_name = req.body.service_name;
+
+ console.log(req.file)
 
   var filePath = "";
   var image_url = "";
@@ -66,19 +68,19 @@ exports.postSubService = (req, res, next) => {
   //       next(err);
   //     });
   // }
-  SubService.create({
-    sub_service_name: sub_service_name,
-    image_url:image_url,
-    service_id: service_id,
-  })
-    .then((result) => {
-      res.json({ status: 201, message: "record added successfully..." });
-      res.end();
-    })
-    .catch((err) => {
-      err.status = 500;
-      next(err);
-    });
+  // SubService.create({
+  //   sub_service_name: sub_service_name,
+  //   image_url:image_url,
+  //   service_id: service_id,
+  // })
+  //   .then((result) => {
+  //     res.json({ status: 201, message: "record added successfully..." });
+  //     res.end();
+  //   })
+  //   .catch((err) => {
+  //     err.status = 500;
+  //     next(err);
+  //   });
 };
 /**
  * @action updateSubService()

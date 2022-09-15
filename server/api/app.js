@@ -8,7 +8,7 @@ const sequelize = require('./../config/db.connection');
 const Sequelize = require("sequelize");
 const AdminModel = require('./../models/admin')(sequelize, Sequelize);
 const bcrypt = require('bcryptjs');
-
+const orderRoute = require('./routes/admin/order');
 
 
 /* database sync */
@@ -53,6 +53,6 @@ app.use('/admin', getCustomerRoute)
 app.use('/admin', getServiceRoute)
 
 /* subservice route */
-app.use('/admin', getSubServiceRoute)
+app.use('/admin', getSubServiceRoute, orderRoute)
 
 module.exports = app;

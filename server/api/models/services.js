@@ -33,15 +33,5 @@ Services.init(
     }
 );
 
-// Services.hasMany(SubServices, {
-//     foreignKey: 'service_id',
-//     targetKey:'id'
-// });
-
-// SubServices.belongsTo(Services,{
-//     foreignKey:'service_id',
-//     targetKey:'id'
-
-// });
 
 module.exports = Services;
