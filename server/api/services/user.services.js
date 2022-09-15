@@ -24,7 +24,7 @@ module.exports = {
 // ORDERS CRUD
 function getOrders() {
     return new Promise((resolve, reject) => {
-        ServiceOrders.findAll({include: [{model:Customers}, {model:Vendors}]})
+        ServiceOrders.findAll({include: [{model:Customers}, {model:Vendors}], limit:10})
             .then(orders => resolve(orders))
             .catch(err => reject(err));
     });
